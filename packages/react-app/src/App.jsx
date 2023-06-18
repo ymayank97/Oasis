@@ -405,7 +405,9 @@ function App(props) {
 
 
         <Route path="/home">
-          {/*  MAKE CHANGES HERE */}
+          <MetaMaskProvider>
+            <HomePage />
+          </MetaMaskProvider>
         </Route>
       </Switch>
 
