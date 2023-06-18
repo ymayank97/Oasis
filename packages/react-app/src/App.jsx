@@ -385,8 +385,6 @@ function App(props) {
             mainnetProvider={mainnetProvider}
           />
         </Route>
-
-        <Route path="/home">{/*  MAKE CHANGES HERE */}</Route>
       </Switch>
 
       <ThemeSwitch />
