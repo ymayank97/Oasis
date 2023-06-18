@@ -12,6 +12,8 @@ npm install
 npm start
 ```
 
+This project was built using React.js.
+
 ## Run the backend
 
 ### Overview
