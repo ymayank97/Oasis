@@ -4,11 +4,13 @@
 pragma solidity >=0.8.0;
 
 import "./StakingInterface.sol";
+import "./QA.sol";
+
 import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "@openzeppelin/contracts/utils/Address.sol";
 
-contract DelegationDAO is AccessControl{
+contract DelegationDAO is AccessControl, QA{
 
 
     using SafeMath for uint256;
@@ -169,20 +171,6 @@ contract DelegationDAO is AccessControl{
                 }
 
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

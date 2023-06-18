@@ -1,4 +1,4 @@
-import { Button, Card, DatePicker, Divider, Input, Progress, Slider, Spin, Switch } from "antd";
+import { Button, Card, DatePicker, Divider, Input, Progress, Slider, Spin, Switch, Table } from "antd";
 import React, { useState } from "react";
 import { utils } from "ethers";
 import { SyncOutlined } from "@ant-design/icons";
@@ -17,15 +17,50 @@ export default function ExampleUI({
   writeContracts,
 }) {
   const [newPurpose, setNewPurpose] = useState("loading...");
+  const [newAnswer, setNewAnswer] = useState("");
+  const [selectedQuestionId, setSelectedQuestionId] = useState(0);
+
+  const [allQuestions, setAllQuestions] = useState([]);
+
+  const fetchAllQuestions = async () => {
+    const questionCount = await readContracts.DelegationDAO.getQuestionCount();
+    const questions = [];
+    for (let i = 0; i < questionCount; i++) {
+      const question = await readContracts.DelegationDAO.getQuestion(i);
+      const answerCount = await readContracts.DelegationDAO.getAnswerCount(i);
+      questions.push({
+        key: i,
+        question: question.question,
+        answerCount: question.answerIds.map(id => id.toString()).length,
+      });
+    }
+    setAllQuestions(questions);
+  };
+
+  const columns = [
+    {
+      title: "Question ID",
+      dataIndex: "key",
+      key: "key",
+    },
+    {
+      title: "Question",
+      dataIndex: "question",
+      key: "question",
+    },
+    {
+      title: "Answer Count",
+      dataIndex: "answerCount",
+      key: "answerCount",
+    },
+  ];
 
   return (
     <div>
-      {/*
-        ⚙️ Here is an example UI that displays and sets the purpose in your smart contract:
-      */}
+      {/* ... rest of the code ... */}
       <div style={{ border: "1px solid #cccccc", padding: 16, width: 400, margin: "auto", marginTop: 64 }}>
-        <h2>Example UI:</h2>
-        <h4>purpose: {purpose}</h4>
+        <h2>Oasis</h2>
+        <h4> Questions List : {purpose}</h4>
         <Divider />
         <div style={{ margin: 8 }}>
           <Input
@@ -38,7 +73,7 @@ export default function ExampleUI({
             onClick={async () => {
               /* look how you call setPurpose on your contract: */
               /* notice how you pass a call back for tx updates too */
-              const result = tx(writeContracts.YourContract.setPurpose(newPurpose), update => {
+              const result = tx(writeContracts.DelegationDAO.askQuestion(newPurpose), update => {
                 console.log("📡 Transaction Update:", update);
                 if (update && (update.status === "confirmed" || update.status === 1)) {
                   console.log(" 🍾 Transaction " + update.hash + " finished!");
@@ -57,163 +92,59 @@ export default function ExampleUI({
               console.log(await result);
             }}
           >
-            Set Purpose!
-          </Button>
-        </div>
-        <Divider />
-        Your Address:
-        <Address address={address} ensProvider={mainnetProvider} fontSize={16} />
-        <Divider />
-        ENS Address Example:
-        <Address
-          address="0x34aA3F359A9D614239015126635CE7732c18fDF3" /* this will show as austingriffith.eth */
-          ensProvider={mainnetProvider}
-          fontSize={16}
-        />
-        <Divider />
-        {/* use utils.formatEther to display a BigNumber: */}
-        <h2>Your Balance: {yourLocalBalance ? utils.formatEther(yourLocalBalance) : "..."}</h2>
-        <div>OR</div>
-        <Balance address={address} provider={localProvider} price={price} />
-        <Divider />
-        <div>🐳 Example Whale Balance:</div>
-        <Balance balance={utils.parseEther("1000")} provider={localProvider} price={price} />
-        <Divider />
-        {/* use utils.formatEther to display a BigNumber: */}
-        <h2>Your Balance: {yourLocalBalance ? utils.formatEther(yourLocalBalance) : "..."}</h2>
-        <Divider />
-        Your Contract Address:
-        <Address
-          address={readContracts && readContracts.YourContract ? readContracts.YourContract.address : null}
-          ensProvider={mainnetProvider}
-          fontSize={16}
-        />
-        <Divider />
-        <div style={{ margin: 8 }}>
-          <Button
-            onClick={() => {
-              /* look how you call setPurpose on your contract: */
-              tx(writeContracts.YourContract.setPurpose("🍻 Cheers"));
-            }}
-          >
-            Set Purpose to &quot;🍻 Cheers&quot;
-          </Button>
-        </div>
-        <div style={{ margin: 8 }}>
-          <Button
-            onClick={() => {
-              /*
-              you can also just craft a transaction and send it to the tx() transactor
-              here we are sending value straight to the contract's address:
-            */
-              tx({
-                to: writeContracts.YourContract.address,
-                value: utils.parseEther("0.001"),
-              });
-              /* this should throw an error about "no fallback nor receive function" until you add it */
-            }}
-          >
-            Send Value
-          </Button>
-        </div>
-        <div style={{ margin: 8 }}>
-          <Button
-            onClick={() => {
-              /* look how we call setPurpose AND send some value along */
-              tx(
-                writeContracts.YourContract.setPurpose("💵 Paying for this one!", {
-                  value: utils.parseEther("0.001"),
-                }),
-              );
-              /* this will fail until you make the setPurpose function payable */
-            }}
-          >
-            Set Purpose With Value
-          </Button>
-        </div>
-        <div style={{ margin: 8 }}>
-          <Button
-            onClick={() => {
-              /* you can also just craft a transaction and send it to the tx() transactor */
-              tx({
-                to: writeContracts.YourContract.address,
-                value: utils.parseEther("0.001"),
-                data: writeContracts.YourContract.interface.encodeFunctionData("setPurpose(string)", [
-                  "🤓 Whoa so 1337!",
-                ]),
-              });
-              /* this should throw an error about "no fallback nor receive function" until you add it */
-            }}
-          >
-            Another Example
+            Ask Question?
           </Button>
         </div>
       </div>
 
-      {/*
-        📑 Maybe display a list of events?
-          (uncomment the event and emit line in YourContract.sol! )
-      */}
-      <Events
-        contracts={readContracts}
-        contractName="YourContract"
-        eventName="SetPurpose"
-        localProvider={localProvider}
-        mainnetProvider={mainnetProvider}
-        startBlock={1}
-      />
-
       <div style={{ width: 600, margin: "auto", marginTop: 32, paddingBottom: 256 }}>
-        <Card>
-          Check out all the{" "}
-          <a
-            href="https://github.com/austintgriffith/scaffold-eth/tree/master/packages/react-app/src/components"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            📦 components
-          </a>
-        </Card>
-
         <Card style={{ marginTop: 32 }}>
-          <div>
-            There are tons of generic components included from{" "}
-            <a href="https://ant.design/components/overview/" target="_blank" rel="noopener noreferrer">
-              🐜 ant.design
-            </a>{" "}
-            too!
+          <div style={{ margin: 8 }}>
+            <Button style={{ marginTop: 8 }} onClick={fetchAllQuestions}>
+              Get All Questions
+            </Button>
           </div>
+          <Table columns={columns} dataSource={allQuestions} />
 
-          <div style={{ marginTop: 8 }}>
-            <Button type="primary">Buttons</Button>
-          </div>
+          <Divider />
+          <h4> Write Answer</h4>
+          <Input
+            style={{ margin: 8 }}
+            placeholder="Enter Question ID"
+            type="number"
+            onChange={e => setSelectedQuestionId(e.target.value)}
+          />
+          <Input
+            style={{ margin: 8 }}
+            placeholder="Enter your answer here"
+            onChange={e => setNewAnswer(e.target.value)}
+          />
+          <Button
+            style={{ marginTop: 14 }}
+            onClick={async () => {
+              const result = tx(writeContracts.DelegationDAO.answerQuestion(selectedQuestionId, newAnswer), update => {
+                console.log("📡 Answer added:", update);
+                if (update && (update.status === "confirmed" || update.status === 1)) {
+                  console.log(" 🍾 Answer " + update.hash + " finished!");
+                  console.log(
+                    " ⛽️ " +
+                      update.gasUsed +
+                      "/" +
+                      (update.gasLimit || update.gas) +
+                      " @ " +
+                      parseFloat(update.gasPrice) / 1000000000 +
+                      " gwei",
+                  );
+                }
+                console.log("awaiting metamask/web3 confirm result...", result);
+              });
+              console.log("awaiting metamask/web3 confirm result...", result);
 
-          <div style={{ marginTop: 8 }}>
-            <SyncOutlined spin /> Icons
-          </div>
-
-          <div style={{ marginTop: 8 }}>
-            Date Pickers?
-            <div style={{ marginTop: 2 }}>
-              <DatePicker onChange={() => {}} />
-            </div>
-          </div>
-
-          <div style={{ marginTop: 32 }}>
-            <Slider range defaultValue={[20, 50]} onChange={() => {}} />
-          </div>
-
-          <div style={{ marginTop: 32 }}>
-            <Switch defaultChecked onChange={() => {}} />
-          </div>
-
-          <div style={{ marginTop: 32 }}>
-            <Progress percent={50} status="active" />
-          </div>
-
-          <div style={{ marginTop: 32 }}>
-            <Spin />
-          </div>
+              console.log("RESDDDDDDDDDDDDDDD: ", await result);
+            }}
+          >
+            Answer Question
+          </Button>
         </Card>
       </div>
     </div>

@@ -20,7 +20,7 @@ module.exports = async ({ getNamedAccounts, deployments, getChainId }) => {
   await deploy("DelegationDAO", {
     // Learn more about args here: https://www.npmjs.com/package/hardhat-deploy#deploymentsdeploy
     from: deployer,
-    args: [ "0x4c5A56ed5A4FF7B09aA86560AfD7d383F4831Cce", "0xC5DF04b46073CE6fd0016E58424923a3fe714cE2" ],
+    args: [ "0x645b0a77E7f1c438afacdad9ac7e6b5D3e39Db4e", "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266" ],
     log: true,
     // waitConfirmations: 5,
   });
@@ -78,4 +78,4 @@ module.exports = async ({ getNamedAccounts, deployments, getChainId }) => {
     console.error("Verification Error =>", error);
   }
 };
-module.exports.tags = ["YourContract"];
+module.exports.tags = ["DelegationDAO"];
