@@ -1,3 +1,19 @@
+# OASIS
+
+The frontend and backend do not (currently) operate together. The frontend consists of all operations except for blockchain integration. The backend includes blockchain integration but no UI. The purpose is to show how the two would work so that in the future, they would be integrated together.
+
+## Run the frontend
+
+Run the following:
+
+```bash
+cd oasis_frontend
+npm install
+npm start
+```
+
+## Run the backend
+
 # 🏗 Scaffold-ETH
 
 > everything you need to build on Ethereum! 🚀
