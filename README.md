@@ -1,4 +1,5 @@
 # Oasis Project 
+<br>
 ### Overview
 Welcome to the Oasis Project - a trailblazing decentralized social platform that's poised to redefine the digital landscape. Built on Moonbeam, this forward-thinking platform is fully compatible with Parachains, bringing to life a new era of interconnected digital communities.
 
@@ -26,11 +27,17 @@ The Oasis Project is designed to empower users by creating an inclusive, democra
 The Oasis Project is built with Scaffold-ETH, a mono repo for rapid Ethereum dapp development.
 
 > bash
+>
 > Copy code
+> 
 > git clone https://github.com/Oasis-Project/Oasis.git
+> 
 > cd Oasis
+> 
 > yarn install
+> 
 > yarn start
+> 
 ### License
 The Oasis Project is released under the UNLICENSED license.
 
