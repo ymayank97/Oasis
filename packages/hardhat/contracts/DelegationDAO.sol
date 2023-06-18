@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: UNLICENSED
 
 
-pragma solidity >=0.8.0;
+pragma solidity >=0.8.1;
 
 import "./StakingInterface.sol";
 import "./QA.sol";
@@ -21,7 +21,11 @@ contract DelegationDAO is AccessControl, QA{
 
     daoState public currentState;
 
+    uint256 public membershipFee;
+
     mapping(address => uint256) public  memberStakes;
+
+     mapping(address => bool) public hasPaid;
 
     uint256 public totalStake;
 
@@ -48,6 +52,25 @@ contract DelegationDAO is AccessControl, QA{
         _setupRole(MEMBER, admin);
 
         currentState = daoState.COLLECTING;
+
+        membershipFee = 0.1 ether;
+
+        payFee();
+    }
+
+    function payFee() public payable {
+        require(msg.value <= membershipFee, "The amount sent is not equal to the membership fee");
+        require(!hasPaid[msg.sender], "This member has already paid the fee");
+
+        totalStake = totalStake.add(msg.value);
+
+        emit Deposit(msg.sender, msg.value);
+
+        // Mark the member as having paid the fee
+        hasPaid[msg.sender] = true;
+
+        // Add the member to the DAO
+        grant_member(msg.sender);
     }
 
 
