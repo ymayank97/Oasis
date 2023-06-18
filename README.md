@@ -14,8 +14,6 @@ npm start
 
 ## Run the backend
 
-# 🏗 Scaffold-ETH
-
 ### Overview
 Welcome to the Oasis Project - a trailblazing decentralized social platform that's poised to redefine the digital landscape. Built on Moonbeam, this forward-thinking platform is fully compatible with Parachains, bringing to life a new era of interconnected digital communities.
 
