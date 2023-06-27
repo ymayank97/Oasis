@@ -42,18 +42,18 @@ The Oasis Project is designed to empower users by creating an inclusive, democra
 ### Quick Start
 The Oasis Project is built with Scaffold-ETH, a mono repo for rapid Ethereum dapp development.
 
-> bash
->
+> Open cmd
+
 > Copy code
-> 
+
 > git clone https://github.com/Oasis-Project/Oasis.git
-> 
+
 > cd Oasis
-> 
+
 > yarn install
-> 
-> yarn start
-> 
+
+> yarn chain
+> Open another terminal , run yarn start
 ### License
 The Oasis Project is released under the UNLICENSED license.
 
